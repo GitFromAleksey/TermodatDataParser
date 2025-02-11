@@ -6,9 +6,27 @@ from TdtPasres import ParserCsv
 
 EXT_TDT = 'tdt'
 EXT_CSV = 'csv'
+EXT_OUT = 'json'
 
-FILE_NAME_TDT = 'Arch Термодат-29 v5.11 04.02.2025-07.02.2025.tdt'
-FILE_NAME_CSV = '04-06.02.2025.csv'
+KEY_TIME_STAMP = 'TIME_STAMP'
+
+def ReadFromFile(file_name: str='') -> str:
+    content = ''
+    try:
+        f = open(file_name, 'rt')
+        content =  f.read()
+        f.close()
+        return content
+    except:
+        print(f'Невозможно открыть файл: {file_name}')
+        return None
+
+def SaveResultToFile(file_name: str='', save_data:str=''):
+    ext = GetFileExt(file_name)
+    out_file = file_name.replace(ext, EXT_OUT)
+    f = open(out_file, 'wt')
+    f.write(save_data)
+    f.close()
 
 def GetFileExt(file_name: str='') -> str:
     split_file_name = file_name.split('.')
@@ -26,48 +44,27 @@ def ListDirFiles(dir:str=os.getcwd(), exts: list[str] = []) -> dict[str,str]:
     return result
 
 def ParseTdtFile(file_name: str=''):
-    content = ''
-    try:
-        f = open(file_name, 'rt')
-        content =  f.read()
-        f.close()
-    except:
-        print(f'Невозможно открыть файл: {file_name}')
+    content = ReadFromFile(file_name)
+    if content == None:
         return
 
     parser = ParserTdt()
     parser.RawDataParse(content)
     json_data = parser.GetParsedDataAsJson()
 
-    split_name = file_name.split('.')
-    ext = split_name[len(split_name)-1]
-    out_file = file_name.replace(ext, 'json')
-
-    f = open(out_file, 'wt')
-    f.write(json_data)
-    f.close()
+    SaveResultToFile(file_name, json_data)
 
 def ParseCsvFile(file_name: str=''):
-    content = ''
-    try:
-        f = open(file_name, 'rt')
-        content =  f.read()
-        f.close()
-    except:
-        print(f'Невозможно открыть файл: {file_name}')
+    content = ReadFromFile(file_name)
+    if content == None:
         return
 
     parser = ParserCsv()
     parser.RawDataParse(content)
     json_data = parser.GetParsedDataAsJson()
 
-    split_name = file_name.split('.')
-    ext = split_name[len(split_name)-1]
-    out_file = file_name.replace(ext, 'json')
+    SaveResultToFile(file_name, json_data)
 
-    f = open(out_file, 'wt')
-    f.write(json_data)
-    f.close()
 
 def main():
     files = ListDirFiles(exts=[EXT_TDT, EXT_CSV])

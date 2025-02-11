@@ -51,7 +51,7 @@ class ParserTdt:
             sensors_data[KEY_TIME_STAMP] = timestamp
             sensors_data['DATE_TIME'] = date_time_str
             self.parsed_lines.append(sensors_data)
-        print(self.parsed_lines)
+        # print(self.parsed_lines)
 
     def LineValidate(self, line: str=''):
         res = re.search(RE_TDT_DATA_LINE, line)
