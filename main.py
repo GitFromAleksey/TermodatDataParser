@@ -3,6 +3,7 @@ import sys
 import re
 from TdtPasres import ParserTdt
 from TdtPasres import ParserCsv
+from json_to_table import cJsonToTableConverter
 
 EXT_TDT = 'tdt'
 EXT_CSV = 'csv'
@@ -27,6 +28,7 @@ def SaveResultToFile(file_name: str='', save_data:str=''):
     f = open(out_file, 'wt')
     f.write(save_data)
     f.close()
+    return out_file
 
 def GetFileExt(file_name: str='') -> str:
     split_file_name = file_name.split('.')
@@ -43,7 +45,7 @@ def ListDirFiles(dir:str=os.getcwd(), exts: list[str] = []) -> dict[str,str]:
                 cnt += 1
     return result
 
-def ParseTdtFile(file_name: str=''):
+def ParseTdtFile(file_name: str='') -> str:
     content = ReadFromFile(file_name)
     if content == None:
         return
@@ -52,9 +54,10 @@ def ParseTdtFile(file_name: str=''):
     parser.RawDataParse(content)
     json_data = parser.GetParsedDataAsJson()
 
-    SaveResultToFile(file_name, json_data)
+    out_filename = SaveResultToFile(file_name, json_data)
+    return out_filename
 
-def ParseCsvFile(file_name: str=''):
+def ParseCsvFile(file_name: str='') -> str:
     content = ReadFromFile(file_name)
     if content == None:
         return
@@ -63,7 +66,8 @@ def ParseCsvFile(file_name: str=''):
     parser.RawDataParse(content)
     json_data = parser.GetParsedDataAsJson()
 
-    SaveResultToFile(file_name, json_data)
+    out_filename = SaveResultToFile(file_name, json_data)
+    return out_filename
 
 
 def main():
@@ -71,11 +75,14 @@ def main():
     print(files)
     file_num = int(input('Введите номер файла для парсинга:'))
     file_name = files[file_num]
+    out_filename = None
     if GetFileExt(file_name) == EXT_TDT:
-        ParseTdtFile(file_name)
+        out_filename = ParseTdtFile(file_name)
     if GetFileExt(file_name) == EXT_CSV:
-        ParseCsvFile(file_name)
+        out_filename = ParseCsvFile(file_name)
 
+    if out_filename != None:
+        cJsonToTableConverter(out_filename)
 
 if __name__ == '__main__':
     main()
