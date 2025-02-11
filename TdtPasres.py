@@ -9,12 +9,12 @@ RE_LINE_NUM_PTRN = r'\d+'
 RE_DATE_PTRN = r'\d{2}.\d{2}.\d{4}'
 RE_SECONDS = r':\d{2}'
 RE_TDT_TIME_PTRN = r'\d{2}:\d{2}' + RE_SECONDS
-RE_TDT_DTTM_PTRN = RE_DATE_PTRN + '\s' + RE_TDT_TIME_PTRN
+RE_TDT_DTTM_PTRN = RE_DATE_PTRN + r'\s' + RE_TDT_TIME_PTRN
 
 # ^1.1 25,4 X X 
 RE_TEMP_PREFIX = r'\s\^'
 RE_SNSR_NUM = r'\d+.\d+'
-RE_TEMP = r'\d+,\d+'
+RE_TEMP = r'[-]?\d+,\d+'
 RE_TEMP_POSTFIX = r' X X'
 RE_SNSR_DATA_PTRN = RE_TEMP_PREFIX + RE_SNSR_NUM + r'\s' + RE_TEMP + RE_TEMP_POSTFIX
 RE_SNSRS_DATA =  r'(' + RE_SNSR_DATA_PTRN + r')+'
@@ -27,7 +27,7 @@ RE_TDT_DATA_LINE = RE_LINE_NUM_PTRN + r'\s' + RE_TDT_DTTM_PTRN + RE_SNSRS_DATA
 # 04.02.2025 18:21;24,2;23,7;25;25,3;25,6;24,4;23
 RE_CSV_SPLITTER = r';'
 RE_CSV_DTTM_PTRN = RE_DATE_PTRN + r'\s' + r'\d{2}:\d{2}'
-RE_CSV_TEMP_PTRN = r'\d+(,\d+)?'
+RE_CSV_TEMP_PTRN = r'[-]?\d+(,\d+)?'
 RE_CSV_SNSRS_DATA = r'(' + RE_CSV_SPLITTER + RE_CSV_TEMP_PTRN + r')+'
 RE_CSV_DATA_LINE = RE_CSV_DTTM_PTRN + RE_CSV_SNSRS_DATA
 
@@ -51,7 +51,7 @@ class ParserTdt:
             sensors_data[KEY_TIME_STAMP] = timestamp
             sensors_data['DATE_TIME'] = date_time_str
             self.parsed_lines.append(sensors_data)
-        # print(parsed_lines)
+        print(self.parsed_lines)
 
     def LineValidate(self, line: str=''):
         res = re.search(RE_TDT_DATA_LINE, line)
@@ -155,11 +155,11 @@ test_raw_tdt_data = '1 06.02.2025 13:52:25 ^1.1 25,0 X X ^1.2 24,9 X X ^1.3 32,1
 2 06.02.2025 13:53:19 ^1.1 25,4 X X ^1.2 25,2 X X ^1.3 32,7 X X ^1.4 40,2 X X ^1.5 33,0 X X ^1.6 33,4 X X ^1.7 31,5 X X ^1.8 21,7 X X ^1.9 22,3 X X ^1.10 21,5 X X ^1.11 22,0 X X ^1.12 20,9 X X ^1.13 21,5 X X ^1.14 21,9 X X ^1.15 21,4 X X ^1.16 21,6 X X \n\
 3 06.02.2025 13:54:23 ^1.1 25,8 X X ^1.2 25,7 X X ^1.3 33,4 X X ^1.4 40,3 X X ^1.5 33,3 X X ^1.6 34,2 X X ^1.7 32,2 X X ^1.8 21,8 X X ^1.9 22,3 X X ^1.10 21,5 X X ^1.11 21,8 X X ^1.12 20,9 X X ^1.13 21,5 X X ^1.14 21,9 X X ^1.15 21,4 X X ^1.16 21,5 X X \n\
 4 06.02.2025 13:55:26 ^1.1 26,0 X X ^1.2 25,9 X X ^1.3 34,2 X X ^1.4 40,6 X X ^1.5 33,6 X X ^1.6 34,7 X X ^1.7 32,5 X X ^1.8 21,7 X X ^1.9 22,3 X X ^1.10 21,5 X X ^1.11 21,9 X X ^1.12 21,0 X X ^1.13 21,5 X X ^1.14 22,0 X X ^1.15 21,4 X X ^1.16 21,5 X X \n\
-5 06.02.2025 13:56:20 ^1.1 26,2 X X ^1.2 26,1 X X ^1.3 34,7 X X ^1.4 40,8 X X ^1.5 33,9 X X ^1.6 35,4 X X ^1.7 33,0 X X ^1.8 21,7 X X ^1.9 22,4 X X ^1.10 21,4 X X ^1.11 21,9 X X ^1.12 20,9 X X ^1.13 21,6 X X ^1.14 21,9 X X ^1.15 21,4 X X ^1.16 21,6 X X \n\
+5 06.02.2025 13:56:20 ^1.1 -26,2 X X ^1.2 26,1 X X ^1.3 34,7 X X ^1.4 40,8 X X ^1.5 33,9 X X ^1.6 35,4 X X ^1.7 33,0 X X ^1.8 21,7 X X ^1.9 22,4 X X ^1.10 21,4 X X ^1.11 21,9 X X ^1.12 20,9 X X ^1.13 21,6 X X ^1.14 21,9 X X ^1.15 21,4 X X ^1.16 21,6 X X \n\
 6 06.02.2025 13:57:23 ^1.1 27,5 X X ^1.2 27,3 X X ^1.3 35,6 X X ^1.4 41,2 X X ^1.5 34,3 X X ^1.6 36,8 X X ^1.7 33,2 X X ^1.8 21,8 X X ^1.9 22,3 X X ^1.10 21,5 X X ^1.11 21,9 X X ^1.12 20,9 X X ^1.13 21,5 X X ^1.14 22,0 X X ^1.15 21,4 X X ^1.16 21,7 X X \n\
-7 06.02.2025 13:58:26 ^1.1 29,1 X X ^1.2 29,1 X X ^1.3 36,4 X X ^1.4 41,5 X X ^1.5 34,6 X X ^1.6 37,8 X X ^1.7 34,1 X X ^1.8 21,8 X X ^1.9 22,4 X X ^1.10 21,6 X X ^1.11 21,9 X X ^1.12 21,0 X X ^1.13 21,6 X X ^1.14 22,0 X X ^1.15 21,4 X X ^1.16 21,6 X X \n\
+7 06.02.2025 13:58:26 ^1.1 29,1 X X ^1.2 29,1 X X ^1.3 -36,4 X X ^1.4 41,5 X X ^1.5 34,6 X X ^1.6 37,8 X X ^1.7 34,1 X X ^1.8 21,8 X X ^1.9 22,4 X X ^1.10 21,6 X X ^1.11 21,9 X X ^1.12 21,0 X X ^1.13 21,6 X X ^1.14 22,0 X X ^1.15 21,4 X X ^1.16 21,6 X X \n\
 8 06.02.2025 13:59:20 ^1.1 30,7 X X ^1.2 31,0 X X ^1.3 37,1 X X ^1.4 41,8 X X ^1.5 35,1 X X ^1.6 38,3 X X ^1.7 35,0 X X ^1.8 21,8 X X ^1.9 22,3 X X ^1.10 21,5 X X ^1.11 21,9 X X ^1.12 21,1 X X ^1.13 21,6 X X ^1.14 21,9 X X ^1.15 21,4 X X ^1.16 21,6 X X \n\
-9 06.02.2025 14:00:23 ^1.1 32,0 X X ^1.2 32,6 X X ^1.3 37,4 X X ^1.4 42,3 X X ^1.5 35,5 X X ^1.6 37,5 X X ^1.7 35,4 X X ^1.8 21,8 X X ^1.9 22,4 X X ^1.10 21,5 X X ^1.11 22,0 X X ^1.12 20,9 X X ^1.13 21,6 X X ^1.14 22,0 X X ^1.15 21,3 X X ^1.16 21,5 X X \n'
+9 06.02.2025 14:00:23 ^1.1 -32,0 X X ^1.2 32,6 X X ^1.3 37,4 X X ^1.4 42,3 X X ^1.5 35,5 X X ^1.6 37,5 X X ^1.7 35,4 X X ^1.8 21,8 X X ^1.9 22,4 X X ^1.10 21,5 X X ^1.11 22,0 X X ^1.12 20,9 X X ^1.13 21,6 X X ^1.14 22,0 X X ^1.15 21,3 X X ^1.16 21,5 X X \n'
 
 
 test_raw_csv_data = '06.02.2025 14:52;26;26,4;27,8;36;29,9;29,3;28,9;21,8\n\
