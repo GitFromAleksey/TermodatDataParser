@@ -1,5 +1,8 @@
 import re
+import json
 from datetime import datetime
+
+KEY_TIME_STAMP = 'TIME_STAMP'
 
 RE_LINE_NUM_PTRN = r'\d+'
 # 06.02.2025 13:52:25
@@ -25,21 +28,24 @@ class Parser:
 
     def RawDataParse(self, raw_data: str=''):
         lines = raw_data.split('\n')
-        parsed_lines = []
+        self.parsed_lines = []
         for line in lines:
             if not self.LineValidate(line):
                 continue
             line_num = self.GetStrNumFromLine(line)
             date_time = self.GetDateTimeFromLine(line)
+            date_time_str = date_time.strftime('%m.%d.%YT%H:%M:%S')
+            timestamp = date_time.timestamp()
             sensors_data = self.GetSensorsData(line)
-            parsed_line = [line_num, date_time, sensors_data]
-            parsed_lines.append(parsed_line)
-        print(parsed_lines)
+            sensors_data[KEY_TIME_STAMP] = timestamp
+            sensors_data['DATE_TIME'] = date_time_str
+            self.parsed_lines.append(sensors_data)
+        # print(parsed_lines)
 
     def LineValidate(self, line: str=''):
         res = re.search(RE_DATA_LINE, line)
         if res:
-            print(res.group(0))
+            # print(res.group(0))
             return True
         return False
 
@@ -67,6 +73,12 @@ class Parser:
             sensor_num = re.search(RE_SNSR_NUM, data_str).group(0)
             sensor_temp = re.search(RE_TEMP, data_str).group(0)
             result[sensor_num] = sensor_temp
+        return result
+
+    def GetParsedDataAsJson(self):
+        result = ''
+        for parsed_line in self.parsed_lines:
+            result += json.dumps(parsed_line) + '\n'
         return result
 
 test_raw_tdt_data = '1 06.02.2025 13:52:25 ^1.1 25,0 X X ^1.2 24,9 X X ^1.3 32,1 X X ^1.4 40,3 X X ^1.5 32,7 X X ^1.6 32,6 X X ^1.7 30,6 X X ^1.8 21,6 X X ^1.9 22,3 X X ^1.10 21,5 X X ^1.11 21,9 X X ^1.12 21,0 X X ^1.13 21,5 X X ^1.14 21,9 X X ^1.15 21,4 X X ^1.16 21,5 X X \n\
