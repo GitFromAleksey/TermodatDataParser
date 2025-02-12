@@ -46,7 +46,7 @@ class ParserTdt:
                 continue
             line_num = self.GetStrNumFromLine(line)
             date_time = self.GetDateTimeFromLine(line)
-            date_time_str = date_time.strftime('%m.%d.%YT%H:%M:%S')
+            date_time_str = date_time.strftime('%d.%m.%YT%H:%M:%S')
             timestamp = date_time.timestamp()
             sensors_data = self.GetSensorsData(line)
             sensors_data[KEY_TIME_STAMP] = timestamp
@@ -108,7 +108,7 @@ class ParserCsv:
                 continue
             pass
             date_time = self.GetDateTimeFromLine(line)
-            date_time_str = date_time.strftime('%m.%d.%YT%H:%M:%S')
+            date_time_str = date_time.strftime('%d.%m.%YT%H:%M:%S')
             timestamp = date_time.timestamp()
             sensors_data = self.GetSensorsData(line)
             sensors_data[KEY_TIME_STAMP] = timestamp
