@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 
 KEY_TIME_STAMP = 'TIME_STAMP'
+DATE_TIME_STAMP = 'DATE_TIME'
 
 RE_LINE_NUM_PTRN = r'\d+'
 # 06.02.2025 13:52:25
@@ -49,7 +50,7 @@ class ParserTdt:
             timestamp = date_time.timestamp()
             sensors_data = self.GetSensorsData(line)
             sensors_data[KEY_TIME_STAMP] = timestamp
-            sensors_data['DATE_TIME'] = date_time_str
+            sensors_data[DATE_TIME_STAMP] = date_time_str
             self.parsed_lines.append(sensors_data)
         # print(self.parsed_lines)
 
