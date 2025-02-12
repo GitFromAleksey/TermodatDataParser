@@ -9,7 +9,7 @@ RE_LINE_NUM_PTRN = r'\d+'
 # 06.02.2025 13:52:25
 RE_DATE_PTRN = r'\d{2}.\d{2}.\d{4}'
 RE_SECONDS = r':\d{2}'
-RE_TDT_TIME_PTRN = r'\d{2}:\d{2}' + RE_SECONDS
+RE_TDT_TIME_PTRN = r'\d{1,2}:\d{2}' + RE_SECONDS
 RE_TDT_DTTM_PTRN = RE_DATE_PTRN + r'\s' + RE_TDT_TIME_PTRN
 
 # ^1.1 25,4 X X 
@@ -27,7 +27,7 @@ RE_TDT_DATA_LINE = RE_LINE_NUM_PTRN + r'\s' + RE_TDT_DTTM_PTRN + RE_SNSRS_DATA
 # регулярка всей строки csv формата
 # 04.02.2025 18:21;24,2;23,7;25;25,3;25,6;24,4;23
 RE_CSV_SPLITTER = r';'
-RE_CSV_DTTM_PTRN = RE_DATE_PTRN + r'\s' + r'\d{2}:\d{2}'
+RE_CSV_DTTM_PTRN = RE_DATE_PTRN + r'\s' + r'\d{1,2}:\d{2}'
 RE_CSV_TEMP_PTRN = r'[-]?\d+(,\d+)?'
 RE_CSV_SNSRS_DATA = r'(' + RE_CSV_SPLITTER + RE_CSV_TEMP_PTRN + r')+'
 RE_CSV_DATA_LINE = RE_CSV_DTTM_PTRN + RE_CSV_SNSRS_DATA
