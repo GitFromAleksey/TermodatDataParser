@@ -2,6 +2,9 @@ import re
 import json
 from datetime import datetime
 
+TDT_DATATIME_FORMAT = '%d.%m.%Y %H:%M:%S'
+SAVE_DATATIME_FORMAT = '%d.%m.%YT%H:%M:%S'
+
 KEY_TIME_STAMP = 'TIME_STAMP'
 DATE_TIME_STAMP = 'DATE_TIME'
 
@@ -46,7 +49,7 @@ class ParserTdt:
                 continue
             line_num = self.GetStrNumFromLine(line)
             date_time = self.GetDateTimeFromLine(line)
-            date_time_str = date_time.strftime('%d.%m.%YT%H:%M:%S')
+            date_time_str = date_time.strftime(SAVE_DATATIME_FORMAT)
             timestamp = date_time.timestamp()
             sensors_data = self.GetSensorsData(line)
             sensors_data[KEY_TIME_STAMP] = timestamp
@@ -71,8 +74,8 @@ class ParserTdt:
         res = re.search(RE_TDT_DTTM_PTRN, line)
         date_time_str = res.group(0)
         # 06.02.2025 13:53:19
-        format = '%d.%m.%Y %H:%M:%S'
-        date_time = datetime.strptime(date_time_str, format)
+        # format = '%d.%m.%Y %H:%M:%S'
+        date_time = datetime.strptime(date_time_str, TDT_DATATIME_FORMAT)
         return date_time
     
     def GetSensorsData(self, line: str=''):
@@ -108,7 +111,7 @@ class ParserCsv:
                 continue
             pass
             date_time = self.GetDateTimeFromLine(line)
-            date_time_str = date_time.strftime('%d.%m.%YT%H:%M:%S')
+            date_time_str = date_time.strftime(SAVE_DATATIME_FORMAT)
             timestamp = date_time.timestamp()
             sensors_data = self.GetSensorsData(line)
             sensors_data[KEY_TIME_STAMP] = timestamp
@@ -126,8 +129,8 @@ class ParserCsv:
         res = re.search(RE_CSV_DTTM_PTRN, line)
         date_time_str = res.group(0)
         # 06.02.2025 13:53:19
-        format = '%d.%m.%Y %H:%M'
-        date_time = datetime.strptime(date_time_str, format)
+        # format = '%d.%m.%Y %H:%M'
+        date_time = datetime.strptime(date_time_str, TDT_DATATIME_FORMAT)
         return date_time
 
     def GetSensorsData(self, line: str=''):
